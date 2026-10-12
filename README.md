@@ -18,12 +18,11 @@ Made by [**web-engineer**](https://www.web-engineer.co.uk/)
 This is an independent project and is not affiliated with or endorsed by
 TP-Link. Kasa is a trademark of its owner.
 
-> **Status: early.** Both of the plugs' protocols are checked byte for byte
-> against [python-kasa](https://github.com/python-kasa/python-kasa), and every
-> key has been tried against simulated KP105 and KP303 plugs. It has not yet
-> been tested against real plugs. Please report anything that behaves
-> differently on yours, and include the model (for example KP303) and the
-> firmware version shown in the Kasa app.
+> **Tested on:** KP105 plugs and the KP303 power strip. Both of the plugs'
+> protocols are also checked byte for byte against
+> [python-kasa](https://github.com/python-kasa/python-kasa). Please report
+> anything that behaves differently on yours, and include the model (for
+> example KP303) and the firmware version shown in the Kasa app.
 
 ## Which plugs work
 
