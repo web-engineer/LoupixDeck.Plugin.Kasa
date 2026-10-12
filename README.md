@@ -18,7 +18,7 @@ Made by [**web-engineer**](https://www.web-engineer.co.uk/)
 This is an independent project and is not affiliated with or endorsed by
 TP-Link. Kasa is a trademark of its owner.
 
-> **Tested on:** KP105 plugs and the KP303 power strip. Both of the plugs'
+> **Tested on:** a KP105 plug and a KP303 power strip. Both of the plugs'
 > protocols are also checked byte for byte against
 > [python-kasa](https://github.com/python-kasa/python-kasa). Please report
 > anything that behaves differently on yours, and include the model (for
