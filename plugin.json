@@ -1,0 +1,12 @@
+{
+  "id": "kasa",
+  "name": "Kasa Smart Plugs",
+  "version": "0.1.0",
+  "sdkVersion": "1.30.0",
+  "entryAssembly": "LoupixDeck.Plugin.Kasa.dll",
+  "platform": "All",
+  "author": "web-engineer",
+  "description": "Switch TP-Link Kasa smart plugs and power strips from the deck, with live on/off state on the keys.",
+  "projectUrl": "https://github.com/web-engineer/LoupixDeck.Plugin.Kasa",
+  "iconFile": "icon.png"
+}

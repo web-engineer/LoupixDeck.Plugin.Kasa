@@ -1,0 +1,45 @@
+name: Build
+
+# Compiles the plugin on every push and pull request, so a broken build shows up before a release.
+# Packaging and attaching files to a GitHub Release is release.yml's job.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Same layout as on a developer machine: the plugin next to a LoupixDeck checkout whose SDK
+      # build is the local package source in nuget.config (SDK 1.30.0 is not on nuget.org yet).
+      - uses: actions/checkout@v5
+        with:
+          path: src/LoupixDeck.Plugin.Kasa
+
+      - uses: actions/checkout@v5
+        with:
+          repository: RadiatorTwo/LoupixDeck.PluginSdk
+          path: src/LoupixDeck/LoupixDeck.PluginSdk
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build Plugin SDK package
+        run: dotnet build src/LoupixDeck/LoupixDeck.PluginSdk -c Release
+
+      # LoupixSkipInstall: the runner has no LoupixDeck plugin folder to copy into.
+      - name: Build
+        run: dotnet build src/LoupixDeck.Plugin.Kasa/LoupixDeck.Plugin.Kasa.csproj -c Release -p:LoupixSkipInstall=true -warnaserror
+
+      # Covers the Kasa layer: both wire protocols (checked against python-kasa), sysinfo parsing, and the plug service.
+      - name: Test
+        run: dotnet test src/LoupixDeck.Plugin.Kasa/tests/LoupixDeck.Plugin.Kasa.Tests -c Release
+
+      - name: Build probe
+        run: dotnet build src/LoupixDeck.Plugin.Kasa/tools/KasaProbe -c Release -warnaserror

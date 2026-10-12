@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Command-line probe for testing against real plugs without LoupixDeck, e.g. over a VPN where
+    the plugs cannot be seen: every control prints the state before and after. Also runs pretend
+    plugs on this computer (simulate) for trying the plugin with no hardware. Compiles the
+    plugin's Kasa layer directly, so it needs nothing from the host.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>kasa-probe</AssemblyName>
+    <RootNamespace>LoupixDeck.Plugin.Kasa.Probe</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../Kasa/**/*.cs" LinkBase="Kasa" />
+  </ItemGroup>
+
+</Project>

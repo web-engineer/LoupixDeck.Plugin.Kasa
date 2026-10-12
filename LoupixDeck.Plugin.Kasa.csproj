@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>LoupixDeck.Plugin.Kasa</AssemblyName>
+    <RootNamespace>LoupixDeck.Plugin.Kasa</RootNamespace>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Version>0.1.0</Version>
+    <Authors>web-engineer</Authors>
+    <Company>Web-Engine Limited</Company>
+    <Copyright>Copyright (c) 2026 Web-Engine Limited, trading as web-engineer</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Switch TP-Link Kasa smart plugs and power strips from the deck, with live on/off state on the keys.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The host provides the SDK assembly at runtime; never ship it next to the plugin. -->
+    <PackageReference Include="LoupixDeck.PluginSdk" Version="1.30.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The tests and the command-line probe are projects of their own. -->
+    <Compile Remove="tests/**;tools/**" />
+    <InternalsVisibleTo Include="LoupixDeck.Plugin.Kasa.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="plugin.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="icon.png" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="icon.png" LogicalName="LoupixDeck.Plugin.Kasa.icon.png" />
+  </ItemGroup>
+
+  <!--
+    Post-build copy into the LoupixDeck plugin folder so every build is picked up by the host.
+    Pass -p:LoupixDebugHost=true to target a Debug build of the host, which reads
+    ~/.config/LoupixDeck/debug/plugins instead of ~/.config/LoupixDeck/plugins.
+  -->
+  <PropertyGroup>
+    <LoupixDebugSuffix Condition="'$(LoupixDebugHost)' == 'true'">/debug</LoupixDebugSuffix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <PluginInstallDir>$(AppData)\LoupixDeck\plugins\kasa</PluginInstallDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <PluginInstallDir>$(HOME)/.config/LoupixDeck$(LoupixDebugSuffix)/plugins/kasa</PluginInstallDir>
+  </PropertyGroup>
+
+  <Target Name="CopyToPluginFolder" AfterTargets="Build" Condition="'$(LoupixSkipInstall)' != 'true'">
+    <MakeDir Directories="$(PluginInstallDir)" />
+    <ItemGroup>
+      <PluginFiles Include="$(OutDir)**\*.*"
+                   Exclude="$(OutDir)LoupixDeck.PluginSdk.*;$(OutDir)*.runtimeconfig.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PluginFiles)"
+          DestinationFolder="$(PluginInstallDir)/%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)/plugin.json"
+          DestinationFolder="$(PluginInstallDir)"
+          SkipUnchangedFiles="true" />
+    <Message Importance="high" Text="Kasa plugin copied to $(PluginInstallDir)" />
+  </Target>
+
+</Project>
